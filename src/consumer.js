@@ -11,8 +11,7 @@ const authHeader = {
 const getUserById = id => {
     return request
         .get(`${getApiEndpoint()}/users/${id}`)
-        .set(authHeader)
-        .then(res => res.body, () => null)
+        //.then(res => res.body, () => null)
 };
 
 const calculateAge = birthday => {
@@ -26,20 +25,20 @@ const age = user => {
     return {
         id: user.id,
         name: user.name,
-        age: calculateAge(new Date(user.birth)),
-        available: user.available
+        age: calculateAge(new Date(user.birth))
     }
 };
 
 // Age API
-server.get("/age/:userId", (req, res) => {
-    if (!req.params.userId) {
+server.get("/usersAge/:userId", (req, res) => {
+    const userId = req.params.userId;
+
+    if (!userId) {
         res.writeHead(400);
         res.end()
     }
 
-    request
-        .get(`${getApiEndpoint()}/users/${req.params.userId}`)
+    getUserById(userId)
         .set(authHeader)
         .then(r => {
             if (r.statusCode === 200) {

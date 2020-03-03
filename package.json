@@ -4,10 +4,23 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "test": "./node_modules/.bin/mocha test/consumer.spec.js",
+    "test:publish": "node test/publish.js",
     "run": "node src/service.js"
   },
   "dependencies": {
     "express": "^4.16.3",
+    "superagent": "^3.8.3"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "chai-as-promised": "^6.0.0",
+    "@pact-foundation/pact": "^9.2.2",
+    "mocha": "^5.2.0",
+    "body-parser": "^1.18.3",
+    "cli-color": "^1.1.0",
+    "eslint": "^3.13.1",
+    "eslint-config-google": "^0.7.1",
     "superagent": "^3.8.3"
   },
   "keywords": [],
