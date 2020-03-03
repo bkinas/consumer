@@ -8,8 +8,8 @@ const opts = {
         ),
     ],
     pactBroker: "http://localhost",
-    tags: ["prod"],
-    consumerVersion: "1.0.0"
+    tags: ["dev"],
+    consumerVersion: "1.1.0"
 };
 
 pact
