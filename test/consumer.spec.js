@@ -11,7 +11,7 @@ const authHeader = {
     Authorization: "Bearer token",
 };
 
-describe("Pact", () => {
+describe("Pact: Consumer Driven Contract", () => {
     const provider = new Pact({
         consumer: "Consumer Service",
         provider: "Provider Service",
@@ -95,6 +95,55 @@ describe("Pact", () => {
                 expect(data)
                     .to.eventually.have.deep.property("id", 1)
                     .notify(done)
+            })
+        });
+
+        describe("and there no users in the database", () => {
+            before(() =>
+                provider.addInteraction({
+                    state: "Has no users",
+                    uponReceiving: "a request for a user with ID 101",
+                    withRequest: {
+                        method: "GET",
+                        path: "/users/101",
+                        headers: { Authorization: "Bearer token" },
+                    },
+                    willRespondWith: {
+                        status: 404,
+                    },
+                })
+            );
+
+            it("returns a 404", done => {
+                const user = getUserById(101)
+                    .set(authHeader)
+                    .then(res => res.body, () => null);
+
+                expect(user)
+                    .to.eventually.be.a("null")
+                    .notify(done)
+            })
+        })
+
+        describe("and the client is not authenticated", () => {
+            before(() =>
+                provider.addInteraction({
+                    state: "is not authenticated",
+                    uponReceiving: "a request for a user with ID 1",
+                    withRequest: {
+                        method: "GET",
+                        path: "/users/1",
+                    },
+                    willRespondWith: {
+                        status: 401,
+                    },
+                })
+            );
+
+            it("returns a 401 unauthorized", () => {
+                return expect(getUserById(1)).to.eventually.be.rejectedWith(
+                    "Unauthorized"
+                )
             })
         })
     });
