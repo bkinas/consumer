@@ -52,7 +52,11 @@ server.get("/usersAge/:userId", (req, res) => {
                 res.end()
             }
         })
-        .catch(e => console.error(e))
+        .catch(e => {
+            console.error(e);
+            res.writeHead(e.status);
+            res.end()
+        })
 });
 
 module.exports = {
